@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_09_132411) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_11_110217) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -63,6 +63,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_09_132411) do
     t.bigint "pad_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "program", default: [], array: true
     t.index ["id"], name: "index_launchers_on_id"
     t.index ["launch_service_provider_id"], name: "index_launchers_on_launch_service_provider_id"
     t.index ["mission_id"], name: "index_launchers_on_mission_id"
