@@ -26,6 +26,8 @@ module ApiRequest
     def execute_request
       @response = yield
       JSON.parse(@response.body.squish)
+    rescue RestClient::TooManyRequests => err
+      raise(StandardError, JSON.parse(err.response.body))
     end
   end
 end

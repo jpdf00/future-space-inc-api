@@ -15,7 +15,6 @@ class LaunchersController < ApplicationController
 
   # POST /launchers
   def create
-    Import::ImportLauncherData.new.call
     # if @launcher.save
     #   render json: @launcher, status: :created, location: @launcher
     # else
@@ -45,6 +44,6 @@ class LaunchersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def launcher_params
-      params.require(:launcher).permit(:url, :launch_library_id, :slug, :name, :net, :window_end, :window_start, :inhold, :tbdtime, :tbddate, :probability, :holdreason, :failreason, :hashtag, :webcast_live, :image, :infographic, :imported_t, :publishing_status, :manual_update)
+      params.require(:launcher).permit(:url, :launch_library_id, :slug, :name, :net, :window_end, :window_start, :inhold, :tbdtime, :tbddate, :probability, :holdreason, :failreason, :hashtag, :webcast_live, :image, :infographic, :imported_t, :publishing_status, :manual_update, :program)
     end
 end
