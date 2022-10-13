@@ -1,5 +1,6 @@
 class SaveLauncherDataJob < ApplicationJob
   queue_as :default
+  retry_on StandardError, wait: 1.hour
 
   def perform(limit:, offset:)
     launches = ApiRequest::TheSpaceDevs::ExecuteGet.new.call(endpoint: "launch/?limit=#{limit}&offset=#{offset}")['results']
@@ -29,11 +30,16 @@ class SaveLauncherDataJob < ApplicationJob
       data['program'] = []
     end
 
-    if instance
-      instance.update(data) unless instance.respond_to?(:manual_update) && instance.manual_update
-      instance.id
-    else
-      model.create(data).id
+    begin
+      if instance
+        instance.update!(data) unless instance.respond_to?(:manual_update) && instance.manual_update
+        instance.id
+      else
+        model.create!(data).id
+      end
+    rescue ActiveRecord::RecordInvalid => err
+      p data
+      p err
     end
   end
 end
