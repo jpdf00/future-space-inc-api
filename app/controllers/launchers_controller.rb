@@ -15,6 +15,7 @@ class LaunchersController < ApplicationController
 
   # POST /launchers
   def create
+    ImportLauncherDataJob.perform_later
     # if @launcher.save
     #   render json: @launcher, status: :created, location: @launcher
     # else
