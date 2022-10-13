@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  redis:
+    container_name: future_space_redis
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
