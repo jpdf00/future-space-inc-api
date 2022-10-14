@@ -3,9 +3,9 @@ class SaveLauncherDataJob < ApplicationJob
   retry_on StandardError, wait: 1.hour
 
   def perform(limit:, offset:)
-    launches = ApiRequest::TheSpaceDevs::ExecuteGet.new.call(endpoint: "launch/?limit=#{limit}&offset=#{offset}")['results']
+    launches = Import::ApiCall::TheSpaceDevs.new.execute_get(endpoint: "launch/?limit=#{limit}&offset=#{offset}")
 
-    launches.each do |launch|
+    launches['results'].each do |launch|
       save_data('launcher', launch)
     end
   end

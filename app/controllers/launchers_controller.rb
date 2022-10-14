@@ -33,12 +33,9 @@ class LaunchersController < ApplicationController
 
   # POST /launchers
   def create
-    ImportLauncherDataJob.perform_later
-    # if @launcher.save
-    #   render json: @launcher, status: :created, location: @launcher
-    # else
-    #   render json: @launcher.errors, status: :unprocessable_entity
-    # end
+    Import::ImportLauncherDataService.new.call
+
+    render json: { message: "Enqueued Import Jobs" }
   end
 
   # PATCH/PUT /launchers/1
