@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  resources :launchers
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
   # Defines the root path route ("/")
-  # root "articles#index"
+  root "launchers#home"
+
+  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  resources :launchers
 end
