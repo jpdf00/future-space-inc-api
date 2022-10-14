@@ -1,9 +1,27 @@
 class LaunchersController < ApplicationController
   before_action :set_launcher, only: %i[ show update destroy ]
 
+  # GET /
+  def home
+    render json: { message: "REST Back-end Challenge 20201209 Running" }
+  end
+
   # GET /launchers
   def index
-    @launchers = Launcher.all
+    page = params[:page].present? ? params[:page].to_i : 1
+    limit = params[:limit].present? ? params[:limit].to_i : 10
+
+    @launchers = Launcher
+      .includes(
+        :status,
+        :launch_service_provider,
+        :mission => :orbit,
+        :pad => :location,
+        :rocket => :configuration
+      )
+      .order(:id)
+      .page(page)
+      .per(limit)
 
     render json: @launchers
   end
