@@ -33,6 +33,12 @@ gem "bootsnap", require: false
 # A simple HTTP and REST client for Ruby
 gem 'rest-client', '~> 2.1'
 
+# Serialization of json responses
+gem 'active_model_serializers'
+
+# A Scope & Engine based, clean, powerful, customizable and sophisticated paginator for modern web app frameworks and ORMs
+gem 'kaminari'
+
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
