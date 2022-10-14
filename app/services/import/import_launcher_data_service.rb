@@ -4,7 +4,7 @@ module Import
 
     def call
       for i in 0...19 do 
-        SaveLauncherDataJob.perform_later(limit: LIMIT, offset: LIMIT * i)
+        ImportLauncherDataJob.perform_later(limit: LIMIT, offset: LIMIT * i)
       end
     end
   end

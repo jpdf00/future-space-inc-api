@@ -1,5 +1,5 @@
 import_launcher_data:
   cron: '0 4 * * *'
-  class: ImportLauncherDataJob
+  class: ImportLauncherSchedulerJob
   queue: default
   description: "This changes proposal status to proper status"
