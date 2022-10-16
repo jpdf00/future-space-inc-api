@@ -1,23 +1,26 @@
-module ApiRequest
-  class Base
+module Base
+  class ApiCall
     def initialize
       @base_url = base_url
-      @method = request_method
       @headers = headers
     end
 
-    def call(endpoint: , payload: {})
+    def execute_get(endpoint:)
+      call(method: :get, endpoint:, payload: {})
+    end
+
+    private
+
+    def call(method:, endpoint:, payload: {})
       execute_request do
         RestClient::Request.execute(
         url: "#{@base_url}#{endpoint}",
-        method: @method,
+        method: method,
         headers: @headers,
         payload: payload
         )
       end
     end
-
-    private
 
     def headers
       {}

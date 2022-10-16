@@ -22,11 +22,11 @@ class CreateLaunchers < ActiveRecord::Migration[7.0]
       t.timestamp :imported_t
       t.integer :publishing_status, default: 0
       t.boolean :manual_update, default: false
-      t.references :status, null: false, foreign_key: true, index: true
-      t.references :launch_service_provider, null: false, foreign_key: true, index: true
-      t.references :rocket, null: false, foreign_key: true, index: true
-      t.references :mission, null: false, foreign_key: true, index: true
-      t.references :pad, null: false, foreign_key: true, index: true
+      t.references :status, null: true, foreign_key: true, index: true
+      t.references :launch_service_provider, null: true, foreign_key: true, index: true
+      t.references :rocket, null: true, foreign_key: true, index: true
+      t.references :mission, null: true, foreign_key: true, index: true
+      t.references :pad, null: true, foreign_key: true, index: true
 
       t.timestamps
     end

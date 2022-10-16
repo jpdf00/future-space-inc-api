@@ -12,7 +12,7 @@ class CreatePads < ActiveRecord::Migration[7.0]
       t.string :longitude
       t.string :map_image
       t.integer :total_launch_count
-      t.references :location, null: false, foreign_key: true, index: true
+      t.references :location, null: true, foreign_key: true, index: true
       t.timestamps
     end
   end
