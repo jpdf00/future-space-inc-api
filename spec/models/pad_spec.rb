@@ -1,5 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Pad, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context 'Associations' do
+    # Assert
+    it { is_expected.to have_many(:launchers) }
+    it { is_expected.to belong_to(:location).optional(true) }
+  end
 end
