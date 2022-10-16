@@ -12,16 +12,16 @@ require 'rails_helper'
 # of tools you can use to make these specs even more expressive, but we're
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
-RSpec.describe "/launchers", type: :request do
+RSpec.describe '/launchers', type: :request do
   # This should return the minimal set of values that should be in the headers
   # in order to pass any filters (e.g. authentication) defined in
   # LaunchersController, or in your router and rack
   # middleware. Be sure to keep this updated too.
-  let(:valid_headers) {
+  let(:valid_headers) do
     {}
-  }
+  end
 
-  describe "GET /index" do
+  describe 'GET /index' do
     subject(:get_launchers) { get launchers_path, as: :json }
 
     context 'when there is data to return' do
@@ -46,7 +46,7 @@ RSpec.describe "/launchers", type: :request do
     end
   end
 
-  describe "GET /show" do
+  describe 'GET /show' do
     let!(:launcher) { create(:launcher) }
 
     context 'when there is data to return' do
@@ -59,13 +59,11 @@ RSpec.describe "/launchers", type: :request do
     end
   end
 
-  describe "POST /create" do
-    subject(:post_launcher) { post launchers_url } 
+  describe 'POST /create' do
+    subject(:post_launcher) { post launchers_url }
 
     let(:import_data_service) { Launchers::ImportDataService }
-    let(:import_data_service_double) {
-      double(import_data_service, call: true)
-    }
+    let(:import_data_service_double) { double(import_data_service, call: true) }
 
     before do
       allow(import_data_service)
@@ -77,7 +75,7 @@ RSpec.describe "/launchers", type: :request do
         .and_return(true))
     end
 
-    it "calls import service" do
+    it 'calls import service' do
       post_launcher
 
       expect(import_data_service_double)
@@ -85,15 +83,15 @@ RSpec.describe "/launchers", type: :request do
         .once)
     end
 
-    it "renders a JSON response" do
+    it 'renders a JSON response' do
       post_launcher
 
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)).to eql({ "message" => "Enqueued Import Jobs" })
+      expect(JSON.parse(response.body)).to eql({ 'message' => 'Enqueued Import Jobs' })
     end
   end
 
-  describe "PATCH /update" do
+  describe 'PATCH /update' do
     let!(:launcher) { create(:launcher) }
 
     context 'with valid parameters' do
@@ -137,7 +135,7 @@ RSpec.describe "/launchers", type: :request do
     end
   end
 
-  describe "DELETE /destroy" do
+  describe 'DELETE /destroy' do
     let!(:launcher) { create(:launcher) }
 
     context 'when there is data to delete' do
