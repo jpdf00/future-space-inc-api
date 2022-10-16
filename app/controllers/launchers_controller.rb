@@ -1,5 +1,5 @@
 class LaunchersController < ApplicationController
-  before_action :set_launcher, only: %i[ show update destroy ]
+  before_action :set_launcher, only: %i[ update destroy ]
 
   # GET /
   def home
@@ -28,12 +28,22 @@ class LaunchersController < ApplicationController
 
   # GET /launchers/1
   def show
+    @launcher = Launcher
+      .includes(
+        :status,
+        :launch_service_provider,
+        :mission => :orbit,
+        :pad => :location,
+        :rocket => :configuration
+      )
+      .find(params[:id])
+
     render json: @launcher
   end
 
   # POST /launchers
   def create
-    Import::ImportLauncherDataService.new.call
+    Launchers::ImportDataService.new.call
 
     render json: { message: "Enqueued Import Jobs" }
   end

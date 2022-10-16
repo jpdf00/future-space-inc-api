@@ -11,8 +11,6 @@ module Base
 
     private
 
-    define_method(:cfg) { Rails.application.config.base_urls_cfg }
-
     def call(method:, endpoint:, payload: {})
       execute_request do
         RestClient::Request.execute(
