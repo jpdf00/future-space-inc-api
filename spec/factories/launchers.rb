@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :launcher do
+    id { SecureRandom.uuid }
     url { "MyString" }
     launch_library_id { 1 }
     slug { "MyString" }
