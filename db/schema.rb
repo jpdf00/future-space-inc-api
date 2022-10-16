@@ -56,11 +56,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_11_110217) do
     t.datetime "imported_t", precision: nil
     t.integer "publishing_status", default: 0
     t.boolean "manual_update", default: false
-    t.bigint "status_id", null: false
-    t.bigint "launch_service_provider_id", null: false
-    t.bigint "rocket_id", null: false
-    t.bigint "mission_id", null: false
-    t.bigint "pad_id", null: false
+    t.bigint "status_id"
+    t.bigint "launch_service_provider_id"
+    t.bigint "rocket_id"
+    t.bigint "mission_id"
+    t.bigint "pad_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "program", default: [], array: true
@@ -90,7 +90,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_11_110217) do
     t.text "description"
     t.string "launch_designator"
     t.string "type"
-    t.bigint "orbit_id", null: false
+    t.bigint "orbit_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["id"], name: "index_missions_on_id"
@@ -116,7 +116,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_11_110217) do
     t.string "longitude"
     t.string "map_image"
     t.integer "total_launch_count"
-    t.bigint "location_id", null: false
+    t.bigint "location_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["id"], name: "index_pads_on_id"
@@ -124,7 +124,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_11_110217) do
   end
 
   create_table "rockets", id: :serial, force: :cascade do |t|
-    t.bigint "configuration_id", null: false
+    t.bigint "configuration_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["configuration_id"], name: "index_rockets_on_configuration_id"
