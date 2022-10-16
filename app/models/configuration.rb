@@ -1,3 +1,3 @@
 class Configuration < ApplicationRecord
-  has_many :rockets
+  has_many :rockets, dependent: :destroy
 end
