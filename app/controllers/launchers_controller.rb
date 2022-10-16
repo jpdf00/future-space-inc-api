@@ -50,6 +50,8 @@ class LaunchersController < ApplicationController
 
   # PATCH/PUT /launchers/1
   def update
+    @launcher.manual_update = true
+
     if @launcher.update(launcher_params)
       render json: @launcher
     else
@@ -70,6 +72,6 @@ class LaunchersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def launcher_params
-      params.require(:launcher).permit(:url, :launch_library_id, :slug, :name, :net, :window_end, :window_start, :inhold, :tbdtime, :tbddate, :probability, :holdreason, :failreason, :hashtag, :webcast_live, :image, :infographic, :imported_t, :publishing_status, :manual_update, :program)
+      params.require(:launcher).permit(:url, :launch_library_id, :slug, :name, :net, :window_end, :window_start, :inhold, :tbdtime, :tbddate, :probability, :holdreason, :failreason, :hashtag, :webcast_live, :image, :infographic, :imported_t, :publishing_status, :program)
     end
 end

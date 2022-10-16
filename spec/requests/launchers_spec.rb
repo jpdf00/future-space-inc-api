@@ -13,17 +13,6 @@ require 'rails_helper'
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
 RSpec.describe "/launchers", type: :request do
-  # This should return the minimal set of attributes required to create a valid
-  # Launcher. As you add validations to Launcher, be sure to
-  # adjust the attributes here as well.
-  let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
-  }
-
-  let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
-  }
-
   # This should return the minimal set of values that should be in the headers
   # in order to pass any filters (e.g. authentication) defined in
   # LaunchersController, or in your router and rack
@@ -33,95 +22,144 @@ RSpec.describe "/launchers", type: :request do
   }
 
   describe "GET /index" do
-    it "renders a successful response" do
-      Launcher.create! valid_attributes
-      get launchers_url, headers: valid_headers, as: :json
-      expect(response).to be_successful
+    subject(:get_launchers) { get launchers_path, as: :json }
+
+    context 'when there is data to return' do
+      let!(:launchers_list) { create_list(:launcher, 10) }
+
+      it 'renders a successful response' do
+        get_launchers
+        expect(response).to be_successful
+      end
+    end
+
+    context 'when there is no data to return' do
+      it 'renders a successful response' do
+        get_launchers
+        expect(response).to be_successful
+      end
+
+      it 'returns an empty array' do
+        get_launchers
+        expect(JSON.parse(response.body, object_class: Launcher)).to eq([])
+      end
     end
   end
 
   describe "GET /show" do
-    it "renders a successful response" do
-      launcher = Launcher.create! valid_attributes
-      get launcher_url(launcher), as: :json
-      expect(response).to be_successful
+    let!(:launcher) { create(:launcher) }
+
+    context 'when there is data to return' do
+      subject(:get_launcher) { get "/launchers/#{launcher.id}", as: :json }
+
+      it 'renders a successful response' do
+        get_launcher
+        expect(response).to be_successful
+      end
     end
   end
 
   describe "POST /create" do
-    context "with valid parameters" do
-      it "creates a new Launcher" do
-        expect {
-          post launchers_url,
-               params: { launcher: valid_attributes }, headers: valid_headers, as: :json
-        }.to change(Launcher, :count).by(1)
-      end
+    subject(:post_launcher) { post launchers_url } 
 
-      it "renders a JSON response with the new launcher" do
-        post launchers_url,
-             params: { launcher: valid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:created)
-        expect(response.content_type).to match(a_string_including("application/json"))
-      end
+    let(:import_data_service) { Launchers::ImportDataService }
+    let(:import_data_service_double) {
+      double(import_data_service, call: true)
+    }
+
+    before do
+      allow(import_data_service)
+        .to(receive(:new)
+        .and_return(import_data_service_double))
+
+      allow(import_data_service_double)
+        .to(receive(:call)
+        .and_return(true))
     end
 
-    context "with invalid parameters" do
-      it "does not create a new Launcher" do
-        expect {
-          post launchers_url,
-               params: { launcher: invalid_attributes }, as: :json
-        }.to change(Launcher, :count).by(0)
-      end
+    it "calls import service" do
+      post_launcher
 
-      it "renders a JSON response with errors for the new launcher" do
-        post launchers_url,
-             params: { launcher: invalid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to match(a_string_including("application/json"))
-      end
+      expect(import_data_service_double)
+        .to(have_received(:call)
+        .once)
+    end
+
+    it "renders a JSON response" do
+      post_launcher
+
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)).to eql({ "message" => "Enqueued Import Jobs" })
     end
   end
 
   describe "PATCH /update" do
-    context "with valid parameters" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
+    let!(:launcher) { create(:launcher) }
 
-      it "updates the requested launcher" do
-        launcher = Launcher.create! valid_attributes
-        patch launcher_url(launcher),
-              params: { launcher: new_attributes }, headers: valid_headers, as: :json
-        launcher.reload
-        skip("Add assertions for updated state")
+    context 'with valid parameters' do
+      let(:patch_params) { attributes_for(:launcher) }
+      subject(:patch_launcher) do
+        patch "/launchers/#{launcher.id}",
+              params: { launcher: patch_params }, as: :json
       end
 
-      it "renders a JSON response with the launcher" do
-        launcher = Launcher.create! valid_attributes
-        patch launcher_url(launcher),
-              params: { launcher: new_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:ok)
-        expect(response.content_type).to match(a_string_including("application/json"))
+      it 'does not create a new launcher' do
+        expect { patch_launcher }.to change(Launcher, :count).by(0)
+      end
+
+      it 'does update a launcher' do
+        patch_launcher
+        expect(Launcher.find(launcher.id).created_at).not_to eq(Launcher.find(launcher.id).updated_at)
+      end
+
+      it 'renders a successful response' do
+        patch_launcher
+        expect(response).to be_successful
       end
     end
 
-    context "with invalid parameters" do
-      it "renders a JSON response with errors for the launcher" do
-        launcher = Launcher.create! valid_attributes
-        patch launcher_url(launcher),
-              params: { launcher: invalid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to match(a_string_including("application/json"))
+    context 'with invalid parameters' do
+      subject(:patch_invalid_launcher) do
+        patch "/launchers/#{launcher.id}",
+              params: { launcher: patch_invalid_params }, as: :json
+      end
+
+      context 'with empty params' do
+        subject(:patch_invalid_launcher) do
+          patch "/launchers/#{launcher.id}",
+                params: {}, as: :json
+        end
+
+        it 'raises ActionController::ParameterMissing' do
+          expect { patch_invalid_launcher }.to raise_error(ActionController::ParameterMissing)
+        end
       end
     end
   end
 
   describe "DELETE /destroy" do
-    it "destroys the requested launcher" do
-      launcher = Launcher.create! valid_attributes
-      expect {
-        delete launcher_url(launcher), headers: valid_headers, as: :json
-      }.to change(Launcher, :count).by(-1)
+    let!(:launcher) { create(:launcher) }
+
+    context 'when there is data to delete' do
+      subject(:delete_launcher) { delete "/launchers/#{launcher.id}", as: :json }
+
+      it 'renders a successful response' do
+        delete_launcher
+        expect(response).to be_successful
+      end
+
+      it 'returns a blank body' do
+        delete_launcher
+        expect(response.body).to eq('')
+      end
+    end
+
+    context 'when there is no data to delete' do
+      subject(:delete_launcher) { delete '/launchers/839d5ba7-6086-4521-a034-f99e7752b063', as: :json }
+
+      it 'raises ActiveRecord::RecordNotFound' do
+        expect { delete_launcher }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
   end
 end
