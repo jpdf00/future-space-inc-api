@@ -7,7 +7,7 @@ RSpec.describe LaunchersController, type: :routing do
     end
 
     it "routes to #show" do
-      expect(get: "/launchers/1").to route_to("launchers#show", id: "1")
+      expect(get: "/launchers/00441721-5019-4c49-aa85-e38aad2d3937").to route_to("launchers#show", id: "00441721-5019-4c49-aa85-e38aad2d3937")
     end
 
 
@@ -16,15 +16,15 @@ RSpec.describe LaunchersController, type: :routing do
     end
 
     it "routes to #update via PUT" do
-      expect(put: "/launchers/1").to route_to("launchers#update", id: "1")
+      expect(put: "/launchers/00441721-5019-4c49-aa85-e38aad2d3937").to route_to("launchers#update", id: "00441721-5019-4c49-aa85-e38aad2d3937")
     end
 
     it "routes to #update via PATCH" do
-      expect(patch: "/launchers/1").to route_to("launchers#update", id: "1")
+      expect(patch: "/launchers/00441721-5019-4c49-aa85-e38aad2d3937").to route_to("launchers#update", id: "00441721-5019-4c49-aa85-e38aad2d3937")
     end
 
     it "routes to #destroy" do
-      expect(delete: "/launchers/1").to route_to("launchers#destroy", id: "1")
+      expect(delete: "/launchers/00441721-5019-4c49-aa85-e38aad2d3937").to route_to("launchers#destroy", id: "00441721-5019-4c49-aa85-e38aad2d3937")
     end
   end
 end
