@@ -14,10 +14,10 @@ module Base
     def call(method:, endpoint:, payload: {})
       execute_request do
         RestClient::Request.execute(
-        url: "#{@base_url}#{endpoint}",
-        method: method,
-        headers: @headers,
-        payload: payload
+          url: "#{@base_url}#{endpoint}",
+          method:,
+          headers: @headers,
+          payload:
         )
       end
     end
@@ -29,8 +29,8 @@ module Base
     def execute_request
       @response = yield
       JSON.parse(@response.body.squish)
-    rescue RestClient::TooManyRequests => err
-      raise(StandardError, JSON.parse(err.response.body))
+    rescue RestClient::TooManyRequests => e
+      raise(StandardError, JSON.parse(e.response.body))
     end
   end
 end

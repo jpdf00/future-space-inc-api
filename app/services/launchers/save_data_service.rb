@@ -4,7 +4,7 @@ module Launchers
       @launchers = launchers
     end
 
-    FOREIGN_KEYS = %w(orbit configuration location status launch_service_provider mission pad rocket)
+    FOREIGN_KEYS = %w[orbit configuration location status launch_service_provider mission pad rocket].freeze
 
     def call
       @launchers.each do |launch|
@@ -16,9 +16,7 @@ module Launchers
 
     def save_data(model_name, data)
       data.each do |key, value|
-        if value.is_a?(Hash)
-          data[key] = save_data(key, value)
-        end
+        data[key] = save_data(key, value) if value.is_a?(Hash)
 
         data = data.transform_keys(key => "#{key}_id") if FOREIGN_KEYS.include?(key)
       end
@@ -30,16 +28,11 @@ module Launchers
 
       data = builder.build(data.with_indifferent_access)
 
-
-      begin
-        if instance
-          instance.update!(data) unless instance.respond_to?(:manual_update) && instance.manual_update
-          instance.id
-        else
-          model.create!(data).id
-        end
-      rescue => err
-        raise(StandardError, err)
+      if instance
+        instance.update!(data) unless instance.respond_to?(:manual_update) && instance.manual_update
+        instance.id
+      else
+        model.create!(data).id
       end
     end
   end

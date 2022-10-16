@@ -1,23 +1,23 @@
 class LaunchersController < ApplicationController
-  before_action :set_launcher, only: %i[ update destroy ]
+  before_action :set_launcher, only: %i[update destroy]
 
   # GET /
   def home
-    render json: { message: "REST Back-end Challenge 20201209 Running" }
+    render json: { message: 'REST Back-end Challenge 20201209 Running' }
   end
 
   # GET /launchers
   def index
-    page = params[:page].present? ? params[:page].to_i : 1
-    limit = params[:limit].present? ? params[:limit].to_i : 10
+    page = params[:page] || 1
+    limit = params[:limit] || 10
 
     @launchers = Launcher
       .includes(
         :status,
         :launch_service_provider,
-        :mission => :orbit,
-        :pad => :location,
-        :rocket => :configuration
+        mission: :orbit,
+        pad: :location,
+        rocket: :configuration
       )
       .order(:id)
       .page(page)
@@ -32,9 +32,9 @@ class LaunchersController < ApplicationController
       .includes(
         :status,
         :launch_service_provider,
-        :mission => :orbit,
-        :pad => :location,
-        :rocket => :configuration
+        mission: :orbit,
+        pad: :location,
+        rocket: :configuration
       )
       .find(params[:id])
 
@@ -45,7 +45,7 @@ class LaunchersController < ApplicationController
   def create
     Launchers::ImportDataService.new.call
 
-    render json: { message: "Enqueued Import Jobs" }
+    render json: { message: 'Enqueued Import Jobs' }
   end
 
   # PATCH/PUT /launchers/1
@@ -65,13 +65,37 @@ class LaunchersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_launcher
-      @launcher = Launcher.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def launcher_params
-      params.require(:launcher).permit(:url, :launch_library_id, :slug, :name, :net, :window_end, :window_start, :inhold, :tbdtime, :tbddate, :probability, :holdreason, :failreason, :hashtag, :webcast_live, :image, :infographic, :imported_t, :publishing_status, :program)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_launcher
+    @launcher = Launcher.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def launcher_params
+    params
+      .require(:launcher)
+      .permit(
+        :url,
+        :launch_library_id,
+        :slug,
+        :name,
+        :net,
+        :window_end,
+        :window_start,
+        :inhold,
+        :tbdtime,
+        :tbddate,
+        :probability,
+        :holdreason,
+        :failreason,
+        :hashtag,
+        :webcast_live,
+        :image,
+        :infographic,
+        :imported_t,
+        :publishing_status,
+        :program
+      )
+  end
 end

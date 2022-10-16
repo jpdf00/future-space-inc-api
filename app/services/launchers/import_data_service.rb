@@ -6,7 +6,7 @@ module Launchers
     end
 
     def call
-      for i in 0...@requests do 
+      (0...@requests).each do |i|
         SaveLauncherImportJob.perform_later(limit: @limit, offset: @limit * i)
       end
     end

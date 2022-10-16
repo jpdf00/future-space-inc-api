@@ -1,5 +1,5 @@
 class Launcher < ApplicationRecord
-  enum publishing_status: [ 'draft', 'trash', 'published' ]
+  enum publishing_status: %w[draft trash published]
 
   belongs_to :status, optional: true
   belongs_to :launch_service_provider, optional: true
